@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Neural Network Visualizer</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- KaTeX for LaTeX rendering (SRI removed to avoid hash mismatch) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <!-- Simple favicon to avoid 404s -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='24' font-size='24'%3E∑%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+  <header>
+    <h1>Linear Regression (2 inputs → 1 output)</h1>
+  </header>
+
+  <main>
+    <div id="canvas-container">
+      <!-- SVG will be injected here -->
+    </div>
+    <section id="exercise" aria-label="Gradient Descent Exercise">
+      <h2>Exercise: Update Weights with Gradient Descent</h2>
+      <p>
+        Model: \(\hat{y} = w_0\cdot 1 + w_1\cdot x_1\) &nbsp; | &nbsp;
+        Loss (MSE for one sample): \(L = \tfrac{1}{2}(\hat{y}-y)^2\)
+      </p>
+      <p>
+        Gradients: \(\frac{\partial L}{\partial w_0} = (\hat{y}-y)\cdot 1\),
+        \(\frac{\partial L}{\partial w_1} = (\hat{y}-y)\cdot x_1\)
+      </p>
+      <div class="controls">
+        <label>Input x₁: <input id="inp-x1" type="number" step="any" value="1.0"></label>
+        <label>Target y: <input id="inp-y" type="number" step="any" value="2.0"></label>
+        <label>Learning rate α: <input id="inp-alpha" type="number" step="any" value="0.1"></label>
+        <button id="btn-update">Update Weights</button>
+        <button id="btn-reset">Reset Weights</button>
+      </div>
+      <div class="status">
+        <span id="status-yhat">ŷ: —</span>
+        <span id="status-loss">L: —</span>
+      </div>
+    </section>
+    <section id="exercise-batch" aria-label="Matrix Gradient Exercise">
+      <h2>Exercise 2: Gradient (Matrix Form)</h2>
+      <p>
+        Data matrix \(X\): first column ones (bias), second column feature values. Parameter vector \(w = [w_0, w_1]^T\). Predictions: \(\hat{Y} = X w\).
+      </p>
+      <p>
+        Loss: \(L = \tfrac{1}{2n} \|X w - Y\|^2 = \tfrac{1}{2n}\sum_{i=1}^n (\hat{y}_i - y_i)^2\) &nbsp; | &nbsp;
+        Gradient: \(\nabla_w L = \frac{1}{n} X^T (X w - Y)\)
+      </p>
+      <div class="dataset">
+        <div class="dataset-block">
+          <strong>X (n×2):</strong>
+          <pre id="code-X" class="code-block">X = np.array([
+    [1., 0.2],
+    [1., 0.5],
+    [1., 0.9],
+    [1., 1.4],
+    [1., 2.0],
+], dtype=float)</pre>
+          <button data-copy-target="code-X" class="copy-btn" type="button">Copy X</button>
+        </div>
+        <div class="dataset-block">
+          <strong>Y (n×1):</strong>
+          <pre id="code-Y" class="code-block">Y = np.array([
+    [0.7],
+    [1.2],
+    [1.9],
+    [2.6],
+    [3.5],
+], dtype=float)</pre>
+          <button data-copy-target="code-Y" class="copy-btn" type="button">Copy Y</button>
+        </div>
+      </div>
+      <div class="controls">
+        <label>Learning rate α: <input id="batch-alpha" type="number" step="any" value="0.1"></label>
+        <button id="batch-update" type="button">Update Weights</button>
+        <button id="batch-reset" type="button">Reset Weights</button>
+      </div>
+      <div class="status" id="batch-status">
+        <span id="batch-w">w: —</span>
+        <span id="batch-loss">L: —</span>
+      </div>
+    </section>
+      <section id="exercise-epochs" aria-label="Epoch Gradient Descent Exercise">
+        <h2>Exercise 3: Multiple Epochs</h2>
+        <p>
+          Write a program that performs gradient descent for a chosen number of epochs on the dataset above.
+          Each epoch should:
+        </p>
+        <ol>
+          <li>Compute predictions \(\hat{Y} = X w\)</li>
+          <li>Compute gradient \(g = \frac{1}{n} X^T (X w - Y)\)</li>
+          <li>Update weights: \(w \leftarrow w - \alpha g\)</li>
+        </ol>
+        <p>Stop after the specified epochs and report final weights and loss.</p>
+        <div class="controls">
+          <label>Learning rate α: <input id="epochs-alpha" type="number" step="any" value="0.1"></label>
+          <label>Epochs: <input id="epochs-count" type="number" step="1" value="10"></label>
+          <button id="epochs-run" type="button">Reveal Final Weights</button>
+          <button id="epochs-reset" type="button">Reset Display</button>
+        </div>
+        <div class="status" id="epochs-status">
+          <span id="epochs-w">w: —</span>
+          <span id="epochs-loss">L: —</span>
+        </div>
+      </section>
+  </main>
+
+  <footer>
+  </footer>
+
+  <script src="script.js"></script>
+  <!-- KaTeX scripts -->
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <script>
+    window.addEventListener('DOMContentLoaded', function () {
+      if (window.renderMathInElement) {
+        window.renderMathInElement(document.body, {
+          delimiters: [
+            { left: '\\(', right: '\\)', display: false },
+            { left: '\\[', right: '\\]', display: true }
+          ]
+        });
+      } else {
+        console.warn('KaTeX auto-render not available yet.');
+      }
+    });
+  </script>
+</body>
+</html>
