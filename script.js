@@ -130,7 +130,7 @@
   }
   function computeLoss(yhat, y) {
     const e = yhat - y;
-    return 0.5 * e * e;
+    return e * e;
   }
   function refreshLabels() {
     biasLabel.textContent = `w0=${round2(state.w0)}`;
@@ -152,8 +152,8 @@
     if (!isFinite(x1) || !isFinite(y) || !isFinite(alpha)) return;
     const yhat = computeYhat(x1);
     const error = yhat - y;
-    const dL_dw0 = error * 1;
-    const dL_dw1 = error * x1;
+    const dL_dw0 = 2 * error * 1;
+    const dL_dw1 = 2 * error * x1;
     state.w0 = state.w0 - alpha * dL_dw0;
     state.w1 = state.w1 - alpha * dL_dw1;
     refreshLabels();
@@ -209,7 +209,7 @@
       const e = preds[i] - Ydata[i];
       sum += e * e;
     }
-    return 0.5 * sum / n;
+    return sum / n;
   }
   function batchGradient(preds) {
     const n = preds.length;
@@ -220,7 +220,7 @@
       g0 += e * 1;      // bias column
       g1 += e * Xdata[i][1];
     }
-    return { g0: g0 / n, g1: g1 / n };
+    return { g0: (2 * g0) / n, g1: (2 * g1) / n };
   }
   function batchRefresh() {
     const preds = batchForward();
@@ -286,7 +286,7 @@
       const e = preds[i] - Ydata[i];
       sum += e * e;
     }
-    return 0.5 * sum / n;
+    return sum / n;
   }
   function epochsGrad(preds, w0, w1) {
     const n = preds.length;
@@ -296,7 +296,7 @@
       g0 += e * 1;
       g1 += e * Xdata[i][1];
     }
-    return { g0: g0 / n, g1: g1 / n };
+    return { g0: (2 * g0) / n, g1: (2 * g1) / n };
   }
   function epochsRefresh() {
     const preds = epochsForward(epochsState.w0, epochsState.w1);

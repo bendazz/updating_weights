@@ -23,11 +23,11 @@
       <h2>Exercise: Update Weights with Gradient Descent</h2>
       <p>
         Model: \(\hat{y} = w_0\cdot 1 + w_1\cdot x_1\) &nbsp; | &nbsp;
-        Loss (MSE for one sample): \(L = \tfrac{1}{2}(\hat{y}-y)^2\)
+        Loss (single-sample MSE): \(L = (\hat{y}-y)^2\)
       </p>
       <p>
-        Gradients: \(\frac{\partial L}{\partial w_0} = (\hat{y}-y)\cdot 1\),
-        \(\frac{\partial L}{\partial w_1} = (\hat{y}-y)\cdot x_1\)
+        Gradients: \(\frac{\partial L}{\partial w_0} = 2(\hat{y}-y)\cdot 1\),
+        \(\frac{\partial L}{\partial w_1} = 2(\hat{y}-y)\cdot x_1\)
       </p>
       <div class="controls">
         <label>Input x₁: <input id="inp-x1" type="number" step="any" value="1.0"></label>
@@ -47,8 +47,8 @@
         Data matrix \(X\): first column ones (bias), second column feature values. Parameter vector \(w = [w_0, w_1]^T\). Predictions: \(\hat{Y} = X w\).
       </p>
       <p>
-        Loss: \(L = \tfrac{1}{2n} \|X w - Y\|^2 = \tfrac{1}{2n}\sum_{i=1}^n (\hat{y}_i - y_i)^2\) &nbsp; | &nbsp;
-        Gradient: \(\nabla_w L = \frac{1}{n} X^T (X w - Y)\)
+        Loss: \(L = \tfrac{1}{n} \|X w - Y\|^2 = \tfrac{1}{n}\sum_{i=1}^n (\hat{y}_i - y_i)^2\) &nbsp; | &nbsp;
+        Gradient: \(\nabla_w L = \frac{2}{n} X^T (X w - Y)\)
       </p>
       <div class="dataset">
         <div class="dataset-block">
@@ -92,7 +92,7 @@
         </p>
         <ol>
           <li>Compute predictions \(\hat{Y} = X w\)</li>
-          <li>Compute gradient \(g = \frac{1}{n} X^T (X w - Y)\)</li>
+          <li>Compute gradient \(g = \frac{2}{n} X^T (X w - Y)\)</li>
           <li>Update weights: \(w \leftarrow w - \alpha g\)</li>
         </ol>
         <p>Stop after the specified epochs and report final weights and loss.</p>
